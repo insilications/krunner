@@ -5,12 +5,14 @@
 %define keepstatic 1
 Name     : krunner
 Version  : 5.90.0
-Release  : 302
+Release  : 303
 URL      : https://download.kde.org/stable/frameworks/5.90/krunner-5.90.0.tar.xz
 Source0  : https://download.kde.org/stable/frameworks/5.90/krunner-5.90.0.tar.xz
 Summary  : Framework for providing different actions given a string query
 Group    : Development/Tools
 License  : GPL-2.0
+Requires: krunner-data = %{version}-%{release}
+Requires: krunner-lib = %{version}-%{release}
 BuildRequires : buildreq-cmake
 BuildRequires : buildreq-kde
 BuildRequires : extra-cmake-modules-data
@@ -29,6 +31,35 @@ BuildRequires : threadweaver-dev
 %description
 SPDX-License-Identifier: CC0-1.0
 
+%package data
+Summary: data components for the krunner package.
+Group: Data
+
+%description data
+data components for the krunner package.
+
+
+%package dev
+Summary: dev components for the krunner package.
+Group: Development
+Requires: krunner-lib = %{version}-%{release}
+Requires: krunner-data = %{version}-%{release}
+Provides: krunner-devel = %{version}-%{release}
+Requires: krunner = %{version}-%{release}
+
+%description dev
+dev components for the krunner package.
+
+
+%package lib
+Summary: lib components for the krunner package.
+Group: Libraries
+Requires: krunner-data = %{version}-%{release}
+
+%description lib
+lib components for the krunner package.
+
+
 %prep
 %setup -q -n krunner-5.90.0
 cd %{_builddir}/krunner-5.90.0
@@ -39,7 +70,7 @@ unset https_proxy
 unset no_proxy
 export SSL_CERT_FILE=/var/cache/ca-certs/anchors/ca-certificates.crt
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1643461862
+export SOURCE_DATE_EPOCH=1643462047
 mkdir -p clr-build
 pushd clr-build
 export GCC_IGNORE_WERROR=1
@@ -113,7 +144,7 @@ make  %{?_smp_mflags}    V=1 VERBOSE=1
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1643461862
+export SOURCE_DATE_EPOCH=1643462047
 rm -rf %{buildroot}
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
@@ -186,3 +217,43 @@ popd
 
 %files
 %defattr(-,root,root,-)
+
+%files data
+%defattr(-,root,root,-)
+/usr/share/dbus-1/interfaces/kf5_org.kde.krunner1.xml
+/usr/share/kdevfiletemplates/templates/runner.tar.bz2
+/usr/share/kdevfiletemplates/templates/runnerpython.tar.bz2
+/usr/share/kservicetypes5/plasma-runner.desktop
+/usr/share/qlogging-categories5/krunner.categories
+/usr/share/qlogging-categories5/krunner.renamecategories
+
+%files dev
+%defattr(-,root,root,-)
+/usr/include/KF5/KRunner/KRunner/AbstractRunner
+/usr/include/KF5/KRunner/KRunner/AbstractRunnerTest
+/usr/include/KF5/KRunner/KRunner/QueryMatch
+/usr/include/KF5/KRunner/KRunner/RunnerContext
+/usr/include/KF5/KRunner/KRunner/RunnerManager
+/usr/include/KF5/KRunner/KRunner/RunnerSyntax
+/usr/include/KF5/KRunner/krunner/abstractrunner.h
+/usr/include/KF5/KRunner/krunner/abstractrunnertest.h
+/usr/include/KF5/KRunner/krunner/krunner_export.h
+/usr/include/KF5/KRunner/krunner/querymatch.h
+/usr/include/KF5/KRunner/krunner/runnercontext.h
+/usr/include/KF5/KRunner/krunner/runnermanager.h
+/usr/include/KF5/KRunner/krunner/runnersyntax.h
+/usr/include/KF5/krunner_version.h
+/usr/lib64/cmake/KF5Runner/KF5KRunnerMacros.cmake
+/usr/lib64/cmake/KF5Runner/KF5RunnerConfig.cmake
+/usr/lib64/cmake/KF5Runner/KF5RunnerConfigVersion.cmake
+/usr/lib64/cmake/KF5Runner/KF5RunnerTargets-none.cmake
+/usr/lib64/cmake/KF5Runner/KF5RunnerTargets.cmake
+/usr/lib64/libKF5Runner.so
+/usr/lib64/qt5/mkspecs/modules/qt_KRunner.pri
+
+%files lib
+%defattr(-,root,root,-)
+/usr/lib64/libKF5Runner.so.5
+/usr/lib64/libKF5Runner.so.5.90.0
+/usr/lib64/qt5/qml/org/kde/runnermodel/librunnermodelplugin.so
+/usr/lib64/qt5/qml/org/kde/runnermodel/qmldir
